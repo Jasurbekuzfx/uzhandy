@@ -1,0 +1,33 @@
+{
+  "name": "ustatop",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --parallel",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "db:migrate": "npm run --workspace=@ustatop/server db:migrate",
+    "db:deploy": "npm run --workspace=@ustatop/server db:deploy",
+    "db:seed": "npm run --workspace=@ustatop/server db:seed",
+    "prisma:generate": "npm run --workspace=@ustatop/server prisma:generate",
+    "bot:dev": "npm run --workspace=@ustatop/server bot:dev",
+    "smoke": "npm run --workspace=@ustatop/server smoke"
+  },
+
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.1",
+    "prettier": "^3.5.1",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.0",
+    "vitest": "^3.0.7"
+  }
+}
