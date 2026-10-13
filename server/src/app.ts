@@ -24,11 +24,22 @@ export function buildApp(): FastifyInstance {
     contentSecurityPolicy: env.NODE_ENV === 'production',
   });
 
-  // CORS - faqat WEB_APP_URL ga ruxsat beradi
+  // CORS - WEB_APP_URL va vercel domenlariga ruxsat beradi
+  const allowedOrigins = env.WEB_APP_URL.split(',').map((u) => u.trim().replace(/\/$/, ''));
+
   app.register(cors, {
     origin: (origin, cb) => {
-      // Agar origin bo'lmasa (masalan server-to-server yoki health check) yoki WEB_APP_URL ga teng bo'lsa
-      if (!origin || origin === env.WEB_APP_URL) {
+      if (!origin) {
+        cb(null, true);
+        return;
+      }
+      const cleanOrigin = origin.replace(/\/$/, '');
+      const isAllowed =
+        allowedOrigins.includes(cleanOrigin) ||
+        cleanOrigin.endsWith('.vercel.app') ||
+        cleanOrigin === 'http://localhost:5173';
+
+      if (isAllowed) {
         cb(null, true);
         return;
       }
