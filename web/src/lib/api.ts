@@ -75,9 +75,12 @@ export async function apiRequest<T>(endpoint: string, options: RequestOptions = 
   const url = `${API_BASE_URL}${normalizedEndpoint}`;
 
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
     ...(options.headers as Record<string, string> | undefined),
   };
+
+  if (options.body !== undefined) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   const tokenToUse = options.token ?? authToken;
   if (tokenToUse) {

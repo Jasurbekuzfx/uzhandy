@@ -19,6 +19,20 @@ export function buildApp(): FastifyInstance {
     },
   });
 
+  // Bo'sh JSON tana kelganda xatolik bermaslik uchun xavfsiz JSON parser
+  app.addContentTypeParser('application/json', { parseAs: 'string' }, (_req, body, done) => {
+    const raw = typeof body === 'string' ? body : body.toString('utf-8');
+    if (!raw || raw.trim() === '') {
+      done(null, {});
+      return;
+    }
+    try {
+      done(null, JSON.parse(raw));
+    } catch (err) {
+      done(err as Error, undefined);
+    }
+  });
+
   // Xavfsizlik sarlavhalari (Helmet)
   app.register(helmet, {
     contentSecurityPolicy: env.NODE_ENV === 'production',
